@@ -10,3 +10,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/MovieRater/MovieRaterClient/target/
+/MovieRater/crawler_imdb/target/
+/MovieRater/MovieRaterCrawler_TM/target/
+/MovieRater/MovieRaterCrawler_IM/target/
+/MovieRater/MovieRaterCrawler_RT/target/
