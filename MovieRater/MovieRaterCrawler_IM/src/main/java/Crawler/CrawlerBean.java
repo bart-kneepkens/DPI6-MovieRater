@@ -6,6 +6,7 @@
 package Crawler;
 
 import Domain.Rating;
+import Messages.MessageDispatcher;
 import Messages.MessageFactory;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -18,6 +19,7 @@ import javax.inject.Named;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Selector;
 
 /**
  *
@@ -30,6 +32,9 @@ public class CrawlerBean
     @Inject
     MessageFactory factory;
     
+    @Inject
+    MessageDispatcher dispatcher;
+    
     private static final String url = "http://www.imdb.com/";
     
     // No-Arg constructor.
@@ -39,9 +44,9 @@ public class CrawlerBean
         String id = getID(query);
         Rating rating = getRating(id);
         System.out.println(factory.getMessageBody(rating));
-        
-        
+
         // Dispatch the message
+        dispatcher.dispatchMessage(factory.getMessageBody(rating));
     }
     
     public String getID(String query){
@@ -61,9 +66,13 @@ public class CrawlerBean
             Element firstSearchResult = doc.select("td[class=primary_photo]").first();
             
             String fullHTML = firstSearchResult.html();
+            
+            // It will throw java.lang.StringIndexOutOfBoundsException if not a movie or seris
             id = fullHTML.substring(fullHTML.indexOf("tt"), fullHTML.indexOf("/?ref_"));
         } catch (IOException ex) {
             Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.lang.StringIndexOutOfBoundsException siob ){
+            System.out.println("Too bad");
         }
         
         return id;
@@ -76,6 +85,7 @@ public class CrawlerBean
         
         try {
             Document doc = Jsoup.connect(pageUrl).get();
+            
             Element ratingValue = doc.select("span[itemprop=ratingValue]").first();
             Element weightValue = doc.select("span[itemprop=ratingCount]").first();
             
@@ -86,7 +96,7 @@ public class CrawlerBean
             
             r = new Rating(rad, wi);
             
-        } catch (IOException | NumberFormatException ex) {
+        } catch (IOException | NumberFormatException | Selector.SelectorParseException ex) {
             Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);

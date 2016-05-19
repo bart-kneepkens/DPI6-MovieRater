@@ -48,7 +48,6 @@ public class MDBean implements MessageListener
         System.out.println("Query:" + q);
         
         crawler.crawl(q);
-        
     }
     
 }
