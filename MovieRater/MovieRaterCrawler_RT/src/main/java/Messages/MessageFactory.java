@@ -24,7 +24,7 @@ import javax.json.JsonReader;
 @Stateless
 public class MessageFactory
 {
-    public static final String CRAWLER_ID = "IM";
+    public static final String CRAWLER_ID = "RT";
     public MessageFactory(){}
     
     public String getMessageBody(Rating r){

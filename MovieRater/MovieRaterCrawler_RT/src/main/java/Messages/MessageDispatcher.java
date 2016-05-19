@@ -44,7 +44,7 @@ public class MessageDispatcher
                 try (JMSContext context = connectionFactory.createContext()) {
                     JMSProducer producer = context.createProducer();
                     producer.send(q, messageBody);
-                    System.out.println("IM - Message dispatched ");
+                    System.out.println("RT - Message dispatched ");
                 }
                 // JMScontext auto closes :)
             }

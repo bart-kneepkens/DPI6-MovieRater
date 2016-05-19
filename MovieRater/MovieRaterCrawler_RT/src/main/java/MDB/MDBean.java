@@ -43,7 +43,7 @@ public class MDBean implements MessageListener
         TextMessage t = (TextMessage) message;
         
         String q = factory.getQueryFromRequestMessageBody(t);
-        System.out.println("IM - Received Query: " + q);
+        System.out.println("RT - Received Query: " + q);
         
         crawler.crawl(q);
     }

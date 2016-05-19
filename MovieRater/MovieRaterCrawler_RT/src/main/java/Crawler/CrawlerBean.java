@@ -35,7 +35,7 @@ public class CrawlerBean
     @Inject
     MessageDispatcher dispatcher;
     
-    private static final String url = "http://www.imdb.com/";
+    private static final String url = "http://www.rottentomatoes.com/";
     
     // No-Arg constructor.
     public CrawlerBean(){};
@@ -61,7 +61,7 @@ public class CrawlerBean
     
     public String getID(String query){
         
-        String finalUrl = url + "find?q=";
+        String finalUrl = url + "search/?search=";
         String id = null;
         
         for (String word : query.split(" ")) {
@@ -73,12 +73,12 @@ public class CrawlerBean
         Document doc;
         try {
             doc = Jsoup.connect(finalUrl).get();
-            Element firstSearchResult = doc.select("td[class=primary_photo]").first();
+            Element firstSearchResult = doc.select("div[class=nomargin media-heading bold]").first();
             
             String fullHTML = firstSearchResult.html();
             
-            // It will throw java.lang.StringIndexOutOfBoundsException if not a movie or seris
-            id = fullHTML.substring(fullHTML.indexOf("tt"), fullHTML.indexOf("/?ref_"));
+            
+            id = fullHTML.substring(fullHTML.indexOf("m/"), fullHTML.indexOf('"', fullHTML.indexOf("/m/")));
         } catch (IOException ex) {
             Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (java.lang.StringIndexOutOfBoundsException | NullPointerException exc ){
@@ -91,18 +91,32 @@ public class CrawlerBean
     public Rating getRating(String Id){
         Rating r = null;
         
-        String pageUrl = url + "title/" + Id;
+        String pageUrl = url  + Id;
         
         try {
             Document doc = Jsoup.connect(pageUrl).get();
             
-            Element ratingValue = doc.select("span[itemprop=ratingValue]").first();
-            Element weightValue = doc.select("span[itemprop=ratingCount]").first();
+            Element ratingValue = doc.select("div[class=audience-info hidden-xs superPageFontColor]").first();
+            //Element weightValue = doc.select("span[itemprop=ratingCount]").first();
             
-            String ra = ratingValue.html();
-            Double rad = Double.parseDouble(ra);
-            String w = weightValue.html();
-            int wi = NumberFormat.getNumberInstance(java.util.Locale.US).parse(w).intValue();
+            String htm = ratingValue.html();
+            
+            int rindex = htm.indexOf("/5");
+            
+            // Default, Rotten tomatoes displays rating /5
+            // Double this value to get rating /10, like the rest of the crawlers
+            String rating = htm.substring(rindex - 3, rindex);
+            
+            double rad = Double.parseDouble(rating) * 2;
+            
+            String qu = "User Ratings: </span>";
+            
+            int aindex = htm.indexOf(qu) + qu.length();
+            int endindex = htm.indexOf("</div", aindex);
+            
+            String amount = htm.substring(aindex + 1, endindex);
+           
+            int wi = NumberFormat.getNumberInstance(java.util.Locale.US).parse(amount).intValue();
             
             r = new Rating(rad, wi);
             
