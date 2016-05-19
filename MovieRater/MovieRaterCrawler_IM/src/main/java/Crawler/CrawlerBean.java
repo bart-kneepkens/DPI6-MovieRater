@@ -43,10 +43,20 @@ public class CrawlerBean
     public void crawl(String query){
         String id = getID(query);
         Rating rating = getRating(id);
-        System.out.println(factory.getMessageBody(rating));
+        
+        String messageBody;
+        
+        if(rating == null){
+            messageBody = factory.notFoundMessageBody();
+        }
+        else{
+            messageBody = factory.getMessageBody(rating);
+        }
+        
+        System.out.println(messageBody);
 
         // Dispatch the message
-        dispatcher.dispatchMessage(factory.getMessageBody(rating));
+        dispatcher.dispatchMessage(messageBody);
     }
     
     public String getID(String query){
@@ -96,10 +106,7 @@ public class CrawlerBean
             
             r = new Rating(rad, wi);
             
-        } catch (IOException | NumberFormatException | Selector.SelectorParseException ex) {
-            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | NumberFormatException | Selector.SelectorParseException | ParseException ex) {
         }
         
         return r;

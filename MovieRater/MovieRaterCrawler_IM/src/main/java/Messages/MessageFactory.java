@@ -37,6 +37,16 @@ public class MessageFactory
         return j.toString();
     }
     
+    public String notFoundMessageBody(){
+        JsonObject j = Json.createObjectBuilder()
+                .add("rating", "NOT_FOUND")
+                .add("weight", "NOT_FOUND")
+                .add("crawlerID", CRAWLER_ID)
+                .build();
+        
+        return j.toString();
+    }
+    
     public String getQueryFromRequestMessageBody(TextMessage m){
         String s = null;
         try {

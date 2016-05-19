@@ -42,7 +42,7 @@ public class MDBean implements MessageListener
     public void onMessage(Message message) {
         TextMessage t = (TextMessage) message;
         
-        System.out.println("RECEIVED MESSAGE");
+        System.out.println("RECEIVED REQUEST");
         
         String q = factory.getQueryFromRequestMessageBody(t);
         System.out.println("Query:" + q);

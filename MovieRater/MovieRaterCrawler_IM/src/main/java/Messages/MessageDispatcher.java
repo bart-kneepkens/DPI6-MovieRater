@@ -24,6 +24,8 @@ import javax.jms.Queue;
 @Singleton
 public class MessageDispatcher
 {
+    @EJB
+    private MessageDispatcher instance;
     
     @Resource(lookup = "jms/__defaultConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -35,7 +37,7 @@ public class MessageDispatcher
     }
     
     public void dispatchMessage(final String messageBody){
-        this.postToJMS(new Runnable()
+        instance.postToJMS(new Runnable()
         {
             @Override
             public void run() {
@@ -51,7 +53,7 @@ public class MessageDispatcher
         );
     }
     
-//    @Asynchronous
+    @Asynchronous
     public void postToJMS(Runnable r){
         r.run();
     }
