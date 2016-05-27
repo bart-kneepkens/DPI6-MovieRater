@@ -23,11 +23,40 @@ and open the template in the editor.
             
             <p:commandButton value="Go!" action="#{sessionBean.btnPressed()}" update="inputForm:tabel"/>
             
-            <p:dataTable var="res" value="#{sessionBean.results}" id="tabel">
-                <p:column headerText="Id">
-                 <h:outputText value="#{res}" />
-                </p:column>
-            </p:dataTable>
+            <p:dataScroller var="res" value="#{sessionBean.results}" id="tabel" chunkSize="10">
+                <p:outputPanel>
+                    <h:outputText value="#{res.query}" />
+                <h:panelGrid columns="2" cellpadding="5">
+                    
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{res.getCrawlResult(0).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{res.getCrawlResult(0).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Weight:" />
+                    <h:outputText value="#{res.getCrawlResult(0).weight}" style="font-weight: bold"/>
+                    
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{res.getCrawlResult(1).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{res.getCrawlResult(1).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Weight:" />
+                    <h:outputText value="#{res.getCrawlResult(1).weight}" style="font-weight: bold"/>
+                    
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{res.getCrawlResult(2).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{res.getCrawlResult(2).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Weight:" />
+                    <h:outputText value="#{res.getCrawlResult(2).weight}" style="font-weight: bold"/>
+                </h:panelGrid>
+            </p:outputPanel>
+            </p:dataScroller>
             
             <p:poll interval="1"  update="inputForm:tabel" />
         </h:form>

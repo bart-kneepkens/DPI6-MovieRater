@@ -5,6 +5,8 @@
  */
 package MDB;
 
+import Domain.CrawlResult;
+import Domain.QueryResult;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +20,13 @@ import org.primefaces.context.RequestContext;
  * @author BartKneepkens
  */
 @Stateless
-public class Service implements Serializable
+public class ResultService implements Serializable
 {
-    List<String> results;
+//    List<String> results;
     
-    public Service(){
+    List<QueryResult> results;
+    
+    public ResultService(){
         
     }
     
@@ -31,16 +35,15 @@ public class Service implements Serializable
         results = new ArrayList<>();
     }
 
-    public List<String> getResults() {
+    public List<QueryResult> getResults() {
         return results;
     }
 
-    public void setResults(List<String> results) {
+    public void setResults(List<QueryResult> results) {
         this.results = results;
     }
     
-    public void addResult(String text){
-        this.results.add(text);
-//        RequestContext.getCurrentInstance().update("tabel");
+    public void addResult(CrawlResult result){
+        this.results.get(this.results.size() - 1).getCrawlResults().add(result);
     }
 }

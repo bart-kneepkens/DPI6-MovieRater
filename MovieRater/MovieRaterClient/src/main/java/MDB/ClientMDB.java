@@ -5,6 +5,8 @@
  */
 package MDB;
 
+import Domain.CrawlResult;
+import Messages.MessageFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
@@ -14,6 +16,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+import javax.json.JsonObject;
 
 /**
  *
@@ -27,7 +30,10 @@ public class ClientMDB implements MessageListener
 {
     
     @Inject
-    Service service;
+    ResultService service;
+    
+    @Inject
+    MessageFactory factory;
     
     public ClientMDB() {
     }
@@ -40,7 +46,10 @@ public class ClientMDB implements MessageListener
             
             System.out.println(t.getText());
             
-            service.addResult(t.getText());
+            JsonObject ob = factory.fromString(t.getText());
+            
+            service.addResult(new CrawlResult(ob));
+           
         } catch (JMSException ex) {
             Logger.getLogger(ClientMDB.class.getName()).log(Level.SEVERE, null, ex);
         }

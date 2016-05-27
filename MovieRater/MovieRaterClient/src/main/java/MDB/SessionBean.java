@@ -5,6 +5,8 @@
  */
 package MDB;
 
+import Domain.CrawlResult;
+import Domain.QueryResult;
 import Messages.MessageDispatcher;
 import Messages.MessageFactory;
 import java.io.Serializable;
@@ -34,7 +36,7 @@ public class SessionBean implements Serializable
     MessageDispatcher dispatcher;
     
     @Inject
-    Service service;
+    ResultService service;
     
     public SessionBean(){}
     
@@ -43,11 +45,16 @@ public class SessionBean implements Serializable
         String in = ec.getRequestParameterMap().get("inputForm:in");
         
         
+        QueryResult qr = new QueryResult();
+        qr.setQuery(in);
+        service.getResults().add(qr);
+        
+        
         String messageBody = factory.getMessageBody(in);
         dispatcher.dispatchMessage(messageBody);
     }
 
-    public List<String> getResults() {
+    public List<QueryResult> getResults() {
         List lijst = service.getResults();
         return service.getResults();
     }

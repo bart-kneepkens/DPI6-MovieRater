@@ -33,4 +33,12 @@ public class MessageFactory implements Serializable
         
         return j.toString();
     }
+    
+    public JsonObject fromString(String q){
+        JsonObject object;
+        try (JsonReader jsonReader = Json.createReader(new StringReader(q))) {
+            object = jsonReader.readObject();
+        }
+        return object;
+    }
 }
