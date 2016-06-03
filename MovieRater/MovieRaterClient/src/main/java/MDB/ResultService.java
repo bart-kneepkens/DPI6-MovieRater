@@ -44,6 +44,6 @@ public class ResultService implements Serializable
     }
     
     public void addResult(CrawlResult result){
-        this.results.get(this.results.size() - 1).getCrawlResults().add(result);
+        this.results.get(0).getCrawlResults().add(result);
     }
 }

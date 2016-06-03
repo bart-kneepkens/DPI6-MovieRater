@@ -80,7 +80,7 @@ public class CrawlerBean
             
             id = fullHTML.substring(fullHTML.indexOf("m/"), fullHTML.indexOf('"', fullHTML.indexOf("/m/")));
         } catch (IOException ex) {
-            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (java.lang.StringIndexOutOfBoundsException | NullPointerException exc ){
             
         }

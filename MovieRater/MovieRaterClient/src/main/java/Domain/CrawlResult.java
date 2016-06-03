@@ -48,7 +48,13 @@ public class CrawlResult
     
     public CrawlResult(JsonObject j){
         this.crawler = Crawlers.valueOf(j.getString("crawlerID"));
+        
+        try{
         this.rating = j.getJsonNumber("rating").doubleValue();
-        this.weight = j.getInt("weight");
+        this.weight = j.getInt("weight");}
+        catch(ClassCastException cce){
+            this.rating = -1;
+            this.weight = -1;
+        }
     }
 }

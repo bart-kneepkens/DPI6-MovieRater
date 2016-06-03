@@ -47,7 +47,7 @@ public class SessionBean implements Serializable
         
         QueryResult qr = new QueryResult();
         qr.setQuery(in);
-        service.getResults().add(qr);
+        service.getResults().add(0,qr);
         
         
         String messageBody = factory.getMessageBody(in);
@@ -57,5 +57,21 @@ public class SessionBean implements Serializable
     public List<QueryResult> getResults() {
         List lijst = service.getResults();
         return service.getResults();
+    }
+    
+    public String calculateAverage(QueryResult qr){
+        double totalRating = 0;
+        int totalVotes = 0;
+        
+        for (CrawlResult cr : qr.getCrawlResults()) {
+            if(cr.getRating() != -1){
+                totalRating = totalRating + cr.getRating() * cr.getWeight();
+                totalVotes = totalVotes + cr.getWeight();
+            } 
+        }
+        
+        double calculatedRating = totalRating / totalVotes;
+        
+        return String.valueOf(calculatedRating).substring(0, 3) + " by " + totalVotes + " voters";
     }
 }

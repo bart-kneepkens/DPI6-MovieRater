@@ -46,4 +46,5 @@ public class QueryResult
         }
         return null;
     }
+   
 }
