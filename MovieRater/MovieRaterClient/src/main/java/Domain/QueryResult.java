@@ -5,17 +5,26 @@
  */
 package Domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author BartKneepkens
  */
-public class QueryResult
+
+@Entity
+public class QueryResult implements Serializable
 {
+    @OneToMany
     List<CrawlResult> crawlResults;
     
+    @Id
     String query;
 
     public List<CrawlResult> getCrawlResults() {
@@ -40,7 +49,6 @@ public class QueryResult
     
     
     public CrawlResult getCrawlResult(int index){
-        
         if((this.crawlResults.size() - 1 )>= index){
             return this.crawlResults.get(index);
         }

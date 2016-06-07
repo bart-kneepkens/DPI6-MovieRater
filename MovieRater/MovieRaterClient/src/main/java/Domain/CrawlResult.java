@@ -5,20 +5,34 @@
  */
 package Domain;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.JsonObject;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  *
  * @author BartKneepkens
  */
-public class CrawlResult
+@Entity
+public class CrawlResult implements Serializable
 {
+    @Id
+    @GeneratedValue
+    private Long id;
+    
     private double rating;
     private int weight;
+    
+    @Enumerated(EnumType.STRING)
     private Crawlers crawler;
 
     public double getRating() {
@@ -44,7 +58,14 @@ public class CrawlResult
     public void setCrawler(Crawlers crawler) {
         this.crawler = crawler;
     }
-    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     
     public CrawlResult(JsonObject j){
         this.crawler = Crawlers.valueOf(j.getString("crawlerID"));
@@ -57,4 +78,6 @@ public class CrawlResult
             this.weight = -1;
         }
     }
+    
+    public CrawlResult(){}
 }
