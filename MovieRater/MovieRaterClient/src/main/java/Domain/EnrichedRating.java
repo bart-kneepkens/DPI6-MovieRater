@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -19,14 +20,17 @@ import javax.persistence.Temporal;
  * @author BartKneepkens
  */
 @Entity
+@NamedQueries({
 @NamedQuery(name="EnrichedRating.findAll", query="SELECT e FROM EnrichedRating e")
+})
 public class EnrichedRating implements Serializable
 {
-    @Id
-    @GeneratedValue
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    private Long id;
         
     @OneToOne
+    @Id
     private QueryResult queryResult;
     
     private int userRating;
@@ -50,14 +54,6 @@ public class EnrichedRating implements Serializable
 
     public void setQueryResult(QueryResult queryResult) {
         this.queryResult = queryResult;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Date getDate() {

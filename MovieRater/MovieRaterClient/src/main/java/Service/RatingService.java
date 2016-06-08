@@ -28,8 +28,9 @@ public class RatingService implements Serializable
         dao.add(er);
     }
     
-    public void editRating(){
-        
+    public void editRating(EnrichedRating er){
+        er.setDate(new Date());
+        dao.edit(er);
     }
     
     public List<EnrichedRating> getHistory(){

@@ -28,8 +28,8 @@ public class RatingDAO
         return em.createNamedQuery("EnrichedRating.findAll").getResultList();
     }
     
-    public EnrichedRating find(Long id){
-        return em.find(EnrichedRating.class, id);
+    public EnrichedRating find(String query){
+        return em.find(EnrichedRating.class, query);
     }
     
     public void add(EnrichedRating er){

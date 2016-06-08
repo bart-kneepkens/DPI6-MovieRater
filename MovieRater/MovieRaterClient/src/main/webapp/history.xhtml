@@ -51,8 +51,7 @@ and open the template in the editor.
                     
                     <h:outputText value="Calculated average: #{sessionBean.calculateAverage(enrichedRating.queryResult)}" />
                     <p:separator />
-                    <h:outputText value="I Rate: " /><p:rating value="#{enrichedRating.userRating}" stars="10">
-                        <p:ajax event="rate" listener="#{sessionBean.onrate}" />
+                    <h:outputText value="I Rated : " /><p:rating value="#{enrichedRating.userRating}" stars="10" readonly="true">
                     </p:rating>
                     <br />
                     <p:separator />

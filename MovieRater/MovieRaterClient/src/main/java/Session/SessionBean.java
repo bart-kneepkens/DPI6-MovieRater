@@ -15,6 +15,7 @@ import Service.RatingService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -57,15 +58,21 @@ public class SessionBean implements Serializable
     }
     
     public void onrate(RateEvent rateEvent) {
-        // Save To DB
-        //get latest rating
         QueryResult result = resultService.getResults().get(0);
         
         EnrichedRating er = new EnrichedRating();
         er.setQueryResult(result);
         er.setUserRating(lastRating);
         
-        ratingService.addRating(er);
+        // If this query is already present inside the history, edit the object instead of adding it
+        if(ratingService.getHistory().stream()
+                .filter(h -> h.getQueryResult().getQuery().equals(er.getQueryResult().getQuery()))
+                .collect(Collectors.toList()).size() > 0){
+            ratingService.editRating(er);
+        }
+        else {
+            ratingService.addRating(er);
+        }
         
         FacesContext context = FacesContext.getCurrentInstance();  
         context.addMessage(null, new FacesMessage("",  "Your rating has been saved to the database! ") );
@@ -93,6 +100,7 @@ public class SessionBean implements Serializable
     }
 
     public List<QueryResult> getResults() {
+        
         return resultService.getResults();
     }
     
