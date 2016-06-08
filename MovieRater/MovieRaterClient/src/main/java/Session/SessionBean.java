@@ -3,22 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MDB;
+package Session;
 
+import Service.ResultService;
 import Domain.CrawlResult;
+import Domain.EnrichedRating;
 import Domain.QueryResult;
 import Messages.MessageDispatcher;
 import Messages.MessageFactory;
+import Service.RatingService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.event.RateEvent;
 
 /**
  *
@@ -36,18 +41,51 @@ public class SessionBean implements Serializable
     MessageDispatcher dispatcher;
     
     @Inject
-    ResultService service;
+    ResultService resultService;
+    
+    @Inject
+    RatingService ratingService;
+    
+    private int lastRating;
+
+    public int getLastRating() {
+        return lastRating;
+    }
+
+    public void setLastRating(int lastRating) {
+        this.lastRating = lastRating;
+    }
+    
+    public void onrate(RateEvent rateEvent) {
+        // Save To DB
+        //get latest rating
+        QueryResult result = resultService.getResults().get(0);
+        
+        EnrichedRating er = new EnrichedRating();
+        er.setQueryResult(result);
+        er.setUserRating(lastRating);
+        
+        ratingService.addRating(er);
+        
+        FacesContext context = FacesContext.getCurrentInstance();  
+        context.addMessage(null, new FacesMessage("",  "Your rating has been saved to the database! ") );
+        
+        resultService.getResults().remove(0);
+        lastRating = 0;
+    }
     
     public SessionBean(){}
     
     public void btnPressed(){
+        
+        this.setLastRating(0);
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         String in = ec.getRequestParameterMap().get("inputForm:in");
         
         
         QueryResult qr = new QueryResult();
         qr.setQuery(in);
-        service.getResults().add(0,qr);
+        resultService.getResults().add(0,qr);
         
         
         String messageBody = factory.getMessageBody(in);
@@ -55,8 +93,7 @@ public class SessionBean implements Serializable
     }
 
     public List<QueryResult> getResults() {
-        List lijst = service.getResults();
-        return service.getResults();
+        return resultService.getResults();
     }
     
     public String calculateAverage(QueryResult qr){
@@ -73,5 +110,9 @@ public class SessionBean implements Serializable
         double calculatedRating = totalRating / totalVotes;
         
         return String.valueOf(calculatedRating).substring(0, 3) + " by " + totalVotes + " voters";
+    }
+    
+    public List<EnrichedRating> getRatingHistory(){
+        return ratingService.getHistory();
     }
 }

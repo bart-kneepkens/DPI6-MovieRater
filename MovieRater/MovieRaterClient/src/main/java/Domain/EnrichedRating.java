@@ -6,16 +6,20 @@
 package Domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author BartKneepkens
  */
 @Entity
+@NamedQuery(name="EnrichedRating.findAll", query="SELECT e FROM EnrichedRating e")
 public class EnrichedRating implements Serializable
 {
     @Id
@@ -25,15 +29,18 @@ public class EnrichedRating implements Serializable
     @OneToOne
     private QueryResult queryResult;
     
-    private double userRating;
+    private int userRating;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date date;
     
     public EnrichedRating(){}
 
-    public double getUserRating() {
+    public int getUserRating() {
         return userRating;
     }
 
-    public void setUserRating(double userRating) {
+    public void setUserRating(int userRating) {
         this.userRating = userRating;
     }
 
@@ -52,8 +59,14 @@ public class EnrichedRating implements Serializable
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
     
     
 }

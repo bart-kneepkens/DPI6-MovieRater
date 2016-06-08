@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>My rating history</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form id="historyForm">
+            <p:dataScroller var="enrichedRating" value="#{sessionBean.ratingHistory}" id="tabel" chunkSize="10">
+                <p:outputPanel>
+                    <h:outputText value="Query: #{enrichedRating.queryResult.query}" />
+                    
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(0).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(0).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Amount of votes:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(0).weight}" style="font-weight: bold"/>
+                    
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(1).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(1).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Amount of votes:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(1).weight}" style="font-weight: bold"/>
+                    
+                    <h:outputText value="Website:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(2).crawler.name}" />
+ 
+                    <h:outputText value="Rating:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(2).rating}" style="font-weight: bold"/>
+ 
+                    <h:outputText value="Amount of votes:" />
+                    <h:outputText value="#{enrichedRating.queryResult.getCrawlResult(2).weight}" style="font-weight: bold"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    
+                    <h:outputText value="Calculated average: #{sessionBean.calculateAverage(enrichedRating.queryResult)}" />
+                    <p:separator />
+                    <h:outputText value="I Rate: " /><p:rating value="#{enrichedRating.userRating}" stars="10">
+                        <p:ajax event="rate" listener="#{sessionBean.onrate}" />
+                    </p:rating>
+                    <br />
+                    <p:separator />
+            </p:outputPanel>
+            </p:dataScroller>
+        </h:form>
+    </h:body>
+</html>

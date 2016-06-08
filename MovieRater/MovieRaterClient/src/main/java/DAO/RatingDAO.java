@@ -8,7 +8,7 @@ package DAO;
 import Domain.CrawlResult;
 import Domain.Crawlers;
 import Domain.EnrichedRating;
-import Domain.QueryResult;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -19,32 +19,34 @@ import javax.persistence.PersistenceContext;
  * @author BartKneepkens
  */
 @Stateless
-@Named
 public class RatingDAO
 {
     @PersistenceContext(unitName="MovieRaterClientPU")
-    EntityManager em;
+    private EntityManager em;
     
+    public List<EnrichedRating> findAll(){
+        return em.createNamedQuery("EnrichedRating.findAll").getResultList();
+    }
     
-    public void test(){
+    public EnrichedRating find(Long id){
+        return em.find(EnrichedRating.class, id);
+    }
+    
+    public void add(EnrichedRating er){
+        for (CrawlResult cr : er.getQueryResult().getCrawlResults()) {
+            em.persist(cr);
+        }
         
-        CrawlResult cr = new CrawlResult();
-        cr.setCrawler(Crawlers.IM);
-        cr.setRating(5);
-        cr.setWeight(222);
-        em.persist(cr);
-        
-//        EnrichedRating er = new EnrichedRating();
-//        er.setId(0L);
-//        
-//        QueryResult qr = new QueryResult();
-//        qr.setQuery("Blablba query");
-//        qr.getCrawlResults().add(cr);
-//        er.setQueryResult(qr);
-//        er.setUserRating(5);
-//        
-//        em.persist(qr);
-//        em.persist(er);
+        em.persist(er.getQueryResult());
+        em.persist(er);
+    }
+    
+    public void edit(EnrichedRating er){
+        em.merge(er);
+    }
+    
+    public void remove(EnrichedRating er){
+        em.remove(er);
     }
     
 }

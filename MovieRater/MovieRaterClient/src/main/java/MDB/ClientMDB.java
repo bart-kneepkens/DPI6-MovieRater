@@ -5,6 +5,7 @@
  */
 package MDB;
 
+import Service.ResultService;
 import Domain.CrawlResult;
 import Messages.MessageFactory;
 import java.util.logging.Level;

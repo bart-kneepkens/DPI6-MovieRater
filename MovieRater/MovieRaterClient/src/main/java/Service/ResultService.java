@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package MDB;
+package Service;
 
 import Domain.CrawlResult;
+import Domain.EnrichedRating;
 import Domain.QueryResult;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,10 +22,8 @@ import org.primefaces.context.RequestContext;
  */
 @Stateless
 public class ResultService implements Serializable
-{
-//    List<String> results;
-    
-    List<QueryResult> results;
+{   
+    private List<QueryResult> results;
     
     public ResultService(){
         
@@ -38,7 +37,7 @@ public class ResultService implements Serializable
     public List<QueryResult> getResults() {
         return results;
     }
-
+    
     public void setResults(List<QueryResult> results) {
         this.results = results;
     }
