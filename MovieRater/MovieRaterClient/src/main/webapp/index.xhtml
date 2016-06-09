@@ -25,13 +25,14 @@ and open the template in the editor.
             
             <p:commandButton value="Go!" action="#{sessionBean.btnPressed()}" update="inputForm:tabel"/>
             
-            <p:commandButton value="My Rating history" style="float:right;" action="faces/history.xhtml?faces-redirect=true" />
+            <p:commandButton value="My Rating history" style="float:right;" action="/faces/history.xhtml?faces-redirect=true" />
             
             <p:dataScroller var="res" value="#{sessionBean.results}" id="tabel" chunkSize="10">
                 <p:outputPanel>
                     <h:outputText value=" Query: " /> <i><u><h:outputText value="#{res.query}" /></u></i>
                     
                 <h:panelGrid columns="2" cellpadding="5">
+                    
                     <h:outputText value="Website:" />
                     <h:outputText value="#{res.getCrawlResult(0).crawler.name}" />
  

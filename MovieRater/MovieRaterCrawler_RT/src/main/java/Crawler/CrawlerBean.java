@@ -37,7 +37,6 @@ public class CrawlerBean
     
     private static final String url = "http://www.rottentomatoes.com/";
     
-    // No-Arg constructor.
     public CrawlerBean(){};
     
     public void crawl(String query){
@@ -53,14 +52,11 @@ public class CrawlerBean
             messageBody = factory.getMessageBody(rating);
         }
         
-        //System.out.println(messageBody);
-
         // Dispatch the message
         dispatcher.dispatchMessage(messageBody);
     }
     
     public String getID(String query){
-        
         String finalUrl = url + "search/?search=";
         String id = null;
         
@@ -77,12 +73,10 @@ public class CrawlerBean
             
             String fullHTML = firstSearchResult.html();
             
-            
             id = fullHTML.substring(fullHTML.indexOf("m/"), fullHTML.indexOf('"', fullHTML.indexOf("/m/")));
-        } catch (IOException ex) {
-//            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (java.lang.StringIndexOutOfBoundsException | NullPointerException exc ){
             
+        }catch (java.lang.StringIndexOutOfBoundsException | NullPointerException | IOException exc ){
+            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, "Exception in RT Crawler.");
         }
         
         return id;
@@ -97,33 +91,34 @@ public class CrawlerBean
             Document doc = Jsoup.connect(pageUrl).get();
             
             Element ratingValue = doc.select("div[class=audience-info hidden-xs superPageFontColor]").first();
-            //Element weightValue = doc.select("span[itemprop=ratingCount]").first();
             
-            String htm = ratingValue.html();
+            String fullHTML = ratingValue.html();
             
-            int rindex = htm.indexOf("/5");
+            int ratingIndex = fullHTML.indexOf("/5");
+            
+            
+            String ratingString = fullHTML.substring(ratingIndex - 3, ratingIndex);
             
             // Default, Rotten tomatoes displays rating /5
             // Double this value to get rating /10, like the rest of the crawlers
-            String rating = htm.substring(rindex - 3, rindex);
+            double ratingDouble = Double.parseDouble(ratingString) * 2;
             
-            double rad = Double.parseDouble(rating) * 2;
             
-            String qu = "User Ratings: </span>";
+            String toSearch = "User Ratings: </span>";
             
-            int aindex = htm.indexOf(qu) + qu.length();
-            int endindex = htm.indexOf("</div", aindex);
+            int weightBeginIndex = fullHTML.indexOf(toSearch) + toSearch.length();
+            int weightEndIndex = fullHTML.indexOf("</div", weightBeginIndex);
             
-            String amount = htm.substring(aindex + 1, endindex);
-           
-            int wi = NumberFormat.getNumberInstance(java.util.Locale.US).parse(amount).intValue();
+            String weightString = fullHTML.substring(weightBeginIndex + 1, weightEndIndex);
             
-            r = new Rating(rad, wi);
+            int weightInt = NumberFormat.getNumberInstance(java.util.Locale.US).parse(weightString).intValue();
+            
+            r = new Rating(ratingDouble, weightInt);
             
         } catch (IOException | NumberFormatException | Selector.SelectorParseException | ParseException ex) {
+            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, "Exception in RT crawler.");
         }
         
         return r;
-    }
-    
+    }   
 }

@@ -37,7 +37,6 @@ public class CrawlerBean
     
     private static final String url = "https://www.themoviedb.org";
     
-    // No-Arg constructor.
     public CrawlerBean(){};
     
     public void crawl(String query){
@@ -53,8 +52,6 @@ public class CrawlerBean
             messageBody = factory.getMessageBody(rating);
         }
         
-        //System.out.println(messageBody);
-
         // Dispatch the message
         dispatcher.dispatchMessage(messageBody);
     }
@@ -74,16 +71,9 @@ public class CrawlerBean
         try {
             doc = Jsoup.connect(finalUrl).get();
             Element firstSearchResult = doc.select("a[class=title result]").first();
-            
-            //String fullHTML = firstSearchResult.html();
-            
-            // It will throw java.lang.StringIndexOutOfBoundsException if not a movie or seris
-            //id = fullHTML.substring(fullHTML.indexOf("tt"), fullHTML.indexOf("/?ref_"));
             id = firstSearchResult.attr("href");
-        } catch (IOException ex) {
-            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (java.lang.StringIndexOutOfBoundsException | NullPointerException exc ){
-            
+        } catch (java.lang.StringIndexOutOfBoundsException | NullPointerException | IOException exc ){
+            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, "Exception in TMDB Crawler");
         }
         
         return id;
@@ -100,17 +90,17 @@ public class CrawlerBean
             Element ratingValue = doc.select("span[itemprop=ratingValue]").first();
             Element weightValue = doc.select("span[itemprop=ratingCount]").first();
             
-            String ra = ratingValue.html();
-            Double rad = Double.parseDouble(ra);
-            String w = weightValue.html();
-            int wi = NumberFormat.getNumberInstance(java.util.Locale.US).parse(w).intValue();
+            String ratingHTML = ratingValue.html();
+            Double ratingDouble = Double.parseDouble(ratingHTML);
+            String weightHTML = weightValue.html();
+            int weightInt = NumberFormat.getNumberInstance(java.util.Locale.US).parse(weightHTML).intValue();
             
-            r = new Rating(rad, wi);
+            r = new Rating(ratingDouble, weightInt);
             
         } catch (IOException | NumberFormatException | Selector.SelectorParseException | ParseException ex) {
+            Logger.getLogger(CrawlerBean.class.getName()).log(Level.SEVERE, null, "Exception in TMDB Crawler");
         }
         
         return r;
     }
-    
 }
