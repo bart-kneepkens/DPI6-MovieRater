@@ -18,4 +18,4 @@ Architecture
 ======
 ![System Architecture](/docs/DPI-ARCH-V1.1.3.png?raw=true")
 
-For futher information on the system architecture, see the [archtecture document](/docs/BartKneepkens.S61.ArchitectuurDocument.v1.4.DPI.pdf).
+For futher information on the system architecture, see the [architecture document](/docs/BartKneepkens.S61.ArchitectuurDocument.v1.4.DPI.pdf).
